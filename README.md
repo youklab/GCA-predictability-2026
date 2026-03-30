@@ -10,9 +10,24 @@ Lars Koopmans, Elinor M. Kay, and Hyun Youk
 
 ## Overview
 
-This repository contains the primary codes, data, outputs, and links to repositories of data used in the study. We investigated a "secrete-and-sense" generalized cellular automaton (GCA) on a two-dimensional triangular lattice with four cell states and exponentially decaying diffusion-weighted coupling. Starting from maximally disordered initial conditions, the system self-organizes into one of three macroscopic outcomes: static configurations, rectilinear waves, or spiral waves.
+This repository contains the simulation engine, analysis scripts, and machine-learning code used in the study. We investigated a generalized cellular automaton (GCA) of secrete-and-sense cells on a two-dimensional triangular lattice with four discrete gene-expression states and exponentially decaying diffusion-weighted coupling. Starting from maximally disordered initial conditions, the system self-organizes into one of three macroscopic outcomes: static configurations, rectilinear waves, or spiral waves. Although the dynamics are deterministic, the macroscopic outcome cannot be reliably inferred from the initial configuration alone — no practically extractable predictive signal was detected by machine learning across multiple model classes — yet predictability emerges dynamically through the behavior of discrete topological objects (vortices and non-contractible loop strings) that arise during self-organization.
 
-Each folder contains its own README describing the scripts and their purpose.
+Each subfolder contains its own README with descriptions of individual scripts.
+
+---
+
+## Quick start
+
+To run a single CA simulation and watch the self-organization dynamics unfold in real time:
+
+```bash
+cd GCA_simulation
+python main.py
+```
+
+This runs the CA from a randomly drawn initial configuration using the parameter values reported in the paper, displays a real-time movie of the evolving lattice from the initial disordered state until the final pattern forms, and prints the pattern type and formation time to the terminal. The final frame remains on screen until the window is closed. The outcome — static configuration, rectilinear wave, or spiral wave — will vary between runs, reflecting the unpredictability that is the subject of the paper.
+
+Requires: Python ≥ 3.9, NumPy, SciPy, Matplotlib, pandas, imageio, and a Matplotlib backend that supports interactive display (`TkAgg` is set by default; change this in `main.py` if needed for your system).
 
 ---
 
@@ -20,123 +35,63 @@ Each folder contains its own README describing the scripts and their purpose.
 
 ```
 GCA-predictability-2026/
-├── README.md                    ← this file
-├── GCA_simulations/             ← GCA simulation engine and main.py for running GCA
-├── analyze_topologicalModes/    ← analyses of vortices, NCL strings, pattern-formation times, etc.
-├── ML_analyses/                 ← machine-learning tests of predictability from initial configurations
-├── clustering_trajectory/       ← graph-based clustering and unique-trajectory analysis
-
+├── README.md                     ← this file
+├── GCA_simulation/               ← CA simulation engine and demo script
+├── analyze_topologicalModes/     ← vortex and NCL-string analyses
+├── ML_analyses/                  ← machine-learning tests of predictability
+└── clustering_trajectory/        ← graph-based trajectory clustering
 ```
 
+---
+
+## GCA_simulation
+
+Contains the core CA simulation engine (`HY_CA_secrete_and_sense_cells.py`) and a minimal demo script (`main.py`). The CA operates on a triangular lattice with periodic boundary conditions. At each synchronous timestep, every cell senses the concentrations of two diffusible molecules secreted by its neighbors and updates its gene-expression state according to a fixed interaction matrix, threshold matrix, and diffusion lengths. The engine handles lattice construction, parameter initialization, simulation, trajectory analysis, vortex detection, and visualization.
+
+Also contains the scripts used to generate the one-million-run dataset for the machine-learning analyses (`v251209Parallel_iterate_trajectories.py`) and the single-cell perturbation experiments (`perturb_initial_state_oneByone.py`, `Analyze_perturb_initial_state_oneByone.py`).
 
 ---
 
-## Simulation (`simulation/`)
+## analyze_topologicalModes
 
-This folder contains the core cellular automaton simulation code, written in Python. The CA operates on a triangular lattice with periodic boundary conditions (toroidal topology). Each cell occupies one of four discrete gene-expression states. At each timestep, every cell simultaneously senses the exponentially decaying diffusion-weighted concentrations secreted by all other cells and updates its state according to a fixed regulatory interaction matrix.
+Contains Python scripts for analyzing the discrete vortices and non-contractible loop (NCL) strings that govern pattern formation.
 
-Scripts in this folder implement:
-
-- lattice initialization with controlled spatial disorder
-- the CA update rule with diffusion-weighted coupling
-- simulation of the single-cell perturbation experiments reported in Fig. 1
-- generation of the one-million-run dataset used in the machine-learning analyses
+Recoding the four cell states as discrete phase vectors reveals three classes of vortex cores: +1 vortices (counterclockwise winding), −1 vortices (clockwise winding), and 0 vortices (no net winding). These structures are invisible in the raw cell-state representation but their dynamics fully determine macroscopic fate. Scripts characterize vortex peak abundances, the descending-staircase structure of vortex counts over time, the timing between last vortex-pair annihilation and final pattern formation, and the dynamics of NCL strings connecting the final surviving vortex pair — which provide a forward-time predictive signature distinguishing spiral-wave runs from non-spiral runs.
 
 ---
 
-## Vortex analysis (`vortex_analysis/`)
+## ML_analyses
 
-This folder contains the Python algorithms used to detect, classify, track, and analyze discrete vortices — the topological collective modes that govern pattern formation in the CA.
+Contains Python scripts testing whether the final macroscopic outcome of the CA can be predicted from the static initial configuration.
 
-We discovered that recoding cell states as discrete phase vectors reveals three classes of vortex cores: +1 vortices (counterclockwise winding), −1 vortices (clockwise winding), and 0 vortices (no net helicity). These vortex structures are invisible in the raw cell-state representation but fully determine the system's dynamical trajectory and final fate.
+The goal was not model optimization but rather asking the most forgiving version of the prediction question: can any supervised learning approach extract predictive signal from the initial configuration, given virtually unlimited training data and increasingly expressive model classes? The task was reduced to binary classification (static vs. dynamic outcome) and tested across logistic regression, Extremely Randomized Trees, gradient boosting, XGBoost, a deep MLP, and a CNN — all trained and evaluated on fixed splits derived from one million independent CA runs (850,000 training / 50,000 validation / 100,000 frozen test).
 
-Scripts in this folder implement:
-
-- connected-component vortex core identification on the triangular lattice with periodic boundary conditions
-- winding number calculation via contour integration around each vortex core
-- vortex charge classification and tracking across timesteps
-- verification of global topological charge neutrality (total winding = 0 at all timesteps, proved analytically in Supplementary Note 5)
-- the Brownian particle model of vortex diffusion and annihilation (Supplementary Note 4), including Monte Carlo simulations and comparison with CA dynamics
-- non-contractible loop (NCL) string detection and charge analysis
+Across all model classes, prediction performance remained indistinguishable from chance under balanced accuracy and ROC–AUC. A model-agnostic featurewise normalized mutual information (NMI) analysis confirmed that no individual lattice site carries detectable predictive dependence on final fate beyond a shuffled-label baseline. This failure is not a limitation of model capacity or training data: no practically extractable predictive signal was detected in the initial configuration under any of the conditions tested. This is consistent with the single-cell perturbation experiments showing that altering one cell out of 196 redirects macroscopic fate approximately 50% of the time — suggesting that whatever predictive structure the initial configuration contains is not statistically accessible by supervised learning.
 
 ---
 
-## Graph-based clustering and trajectory analysis (`clustering/`)
+## clustering_trajectory
 
-This folder contains the MATLAB code used for graph-based clustering of CA trajectories and the unique-trajectory collapse analysis. Figures were generated in R.
-
----
-
-## Machine-learning analyses (`ml/`)
-
-This folder contains the Python machine-learning scripts used to test whether the final macroscopic fate of the CA can be predicted directly from the static initial configuration.
-
-### Scientific goal
-
-The goal of these analyses was not leaderboard-style model optimization. Instead, we sought to ask the most forgiving version of the prediction question: can any supervised learning approach extract predictive signal about final fate from the initial configuration, given virtually unlimited training data and increasingly expressive model classes?
-
-To make the prediction task as easy as possible, we reduced it to binary classification:
-- **label = 1**: the run ends in a static configuration
-- **label = 0**: the run ends in any dynamic spatial pattern (rectilinear or spiral waves)
-
-All models were trained and evaluated on fixed, precomputed dataset splits derived from one million independent CA simulations:
-- **Training pool:** 850,000 samples
-- **Validation set:** 50,000 samples
-- **Frozen test set:** 100,000 samples (never used during training or model selection)
-
-These splits were used consistently across all ML experiments. Approximately 26.6% of runs yielded static outcomes and 73.4% yielded dynamic outcomes.
-
-### Scripts
-
-**`ml_step1_baselines.py`**  
-Computes trivial baselines for the imbalanced binary classification task: always predict dynamic, always predict static, and random guessing at the class prior. This script was used as a sanity check to show that raw accuracy is misleading under class imbalance, motivating the use of balanced accuracy and ROC–AUC as the primary evaluation metrics throughout.
-
-**`ml_step2_learning_curves_tabular.py`**  
-Generates learning curves for baseline tabular classifiers trained directly on the initial configuration: logistic regression with one-hot encoding of the four cell states, Extremely Randomized Trees, and histogram-based gradient boosting. Models are trained on subsets of increasing size drawn from the training pool (N = 10³, 3×10³, 10⁴, 3×10⁴, 10⁵, 3×10⁵, 8.5×10⁵) and evaluated on the frozen test set. Three independent random subsamples (seeds) are used per training size. This script provides the primary baseline learning-curve analysis (Supplementary Fig. 5).
-
-**`ml_step3_threshold_calibration.py`**  
-Tests whether careful decision-threshold selection can improve predictive performance for the baseline classifiers. Each model is trained on the full training pool to produce continuous probability scores. A threshold is selected exclusively on the validation set to maximize balanced accuracy, then applied unchanged to the frozen test set. This script also generates ROC curves, precision-recall curves, score histograms, and confusion matrices. We found that threshold calibration does not rescue predictability when score rankings are already at chance (Supplementary Fig. 6).
-
-**`ml_step4_xgboost_learning_curves.py`**  
-Generates learning curves for an aggressively tuned XGBoost classifier trained on one-hot encoded initial configurations, with validation-based early stopping. This script tests whether a stronger nonlinear boosted-tree model uncovers predictive signal missed by the baseline tabular models (Supplementary Fig. 7).
-
-**`ml_step5a_mlp_learning_curves.py`**  
-Generates learning curves for a deep multilayer perceptron (MLP) implemented in PyTorch, trained on one-hot encoded initial configurations with validation-based early stopping. This script tests whether a high-capacity fully connected neural network can extract predictive signal from the initial configuration (Supplementary Fig. 8).
-
-**`ml_step5b_cnn_learning_curves.py`**  
-Generates learning curves for a convolutional neural network (CNN) implemented in PyTorch. The initial configuration is represented as a four-channel 2D lattice with one channel per cell state. This script tests whether explicitly incorporating spatial inductive bias improves predictability (Supplementary Fig. 9). Note: the CNN uses a square-grid tensor representation of the lattice and therefore provides a conservative spatial benchmark rather than an architecture exactly matched to the triangular-lattice geometry.
-
-**`ml_stepN_nmi_featurewise_learning_curve.py`**  
-Computes a model-agnostic featurewise normalized mutual-information (NMI) analysis as an independent sanity check. For each lattice site, the script estimates the mutual information between that site's initial state and the binary fate label, normalized by the outcome entropy H(y). Results are summarized across sites using the mean and 95th-percentile NMI, and compared against shuffled-label controls. This analysis confirms that individual lattice sites carry no measurable predictive dependence on final fate beyond the null baseline, consistent with the supervised-learning learning curves.
-
-### Interpretation
-
-Across all tested static predictors — linear models, tree ensembles, boosted trees, fully connected deep networks, and convolutional neural networks — prediction performance remained indistinguishable from chance when evaluated by balanced accuracy and ROC–AUC. The NMI analysis likewise showed no detectable site-level predictive dependence beyond shuffled-label baselines. These results demonstrate that the failure of prediction is not a limitation of model capacity or training data, but reflects the genuine absence of accessible predictive features in the initial state.
-
-This null result is consistent with the single-cell perturbation experiments reported in the main text, which show that altering a single cell's state out of 196 redirects macroscopic fate approximately 50% of the time — indicating that the decision boundary between fate classes is so finely structured in configuration space that no static classifier operating on the initial configuration should be expected to resolve it.
+Contains MATLAB scripts for graph-based clustering of CA trajectories and a visualization of how trajectory structure evolves over time. Analyses use a coarse scalar observable — total vortex-core size as a function of backward time — to ask when trajectories destined for different final pattern types begin to separate. An animated example (`graph_evolution.gif`) illustrates the graph-based clustering analysis.
 
 ---
 
 ## Dependencies
 
-### Python
-Used for CA simulation, vortex analysis, machine-learning analyses, and NMI computation.
+**Python** (CA simulation, vortex analysis, machine learning):
 - Python ≥ 3.9
-- numpy, scipy, pandas, matplotlib
-- scikit-learn
-- xgboost
-- torch (PyTorch) — for MLP and CNN scripts
+- numpy, scipy, pandas, matplotlib, imageio
+- scikit-learn, xgboost
+- torch (PyTorch) — for MLP and CNN scripts only
+- tqdm — for `ncl_data_collection_script.py` only
 
-Install via:
 ```bash
-pip install numpy scipy pandas matplotlib scikit-learn xgboost torch
+pip install numpy scipy pandas matplotlib imageio scikit-learn xgboost torch tqdm
 ```
 
-### MATLAB
-Used for graph-based clustering and unique-trajectory analysis (`clustering/`).
+**MATLAB** — for `clustering_trajectory/`
 
-### R
-Used for figure generation.
+**R** — for figure generation (not included in this repository)
 
 ---
 
@@ -148,4 +103,4 @@ If you use this code, please cite the corresponding manuscript (preprint and jou
 
 ## Acknowledgements
 
-This work was supported by a grant from the National Institutes of Health (NIH-NIGMS R35 Grant, GM147508).
+This work was supported by the National Institutes of Health (NIH-NIGMS R35 Grant GM147508).
