@@ -4,13 +4,13 @@ Code repository for the manuscript:
 
 **"Predictability is dynamically constructed by topological collective modes in deterministic systems"**
 
-Lars Koopmans, Elinor M. Kay, and Hyun Youk
+Lars Koopmans, Elinor M. Kay, and Hyun Youk (2026)
 
 ---
 
 ## Overview
 
-This repository contains the simulation engine, analysis scripts, and machine-learning code used in the study. We investigated a generalized cellular automaton (GCA) of secrete-and-sense cells on a two-dimensional triangular lattice with four discrete gene-expression states and exponentially decaying diffusion-weighted coupling. Starting from maximally disordered initial conditions, the system self-organizes into one of three macroscopic outcomes: static configurations, rectilinear waves, or spiral waves. Although the dynamics are deterministic, the macroscopic outcome cannot be reliably inferred from the initial configuration alone — no practically extractable predictive signal was detected by machine learning across multiple model classes — yet predictability emerges dynamically through the behavior of discrete topological objects (vortices and non-contractible loop strings) that arise during self-organization.
+This repository contains the simulation engine, analysis scripts, machine-learning codes, and key data used in the study. We investigated a generalized cellular automaton (GCA) of secrete-and-sense cells on a two-dimensional triangular lattice with four discrete gene-expression states and exponentially decaying diffusion-weighted coupling. Starting from maximally disordered initial conditions, the system self-organizes into one of three macroscopic outcomes: static configurations, rectilinear waves, or spiral waves. Although the dynamics are deterministic, the macroscopic outcome cannot be reliably inferred from the initial configuration alone — no practically extractable predictive signal was detected by machine learning across multiple model classes — yet predictability emerges dynamically through the behavior of discrete topological objects (vortices and non-contractible loop strings) that arise during self-organization.
 
 Each subfolder contains its own README with descriptions of individual scripts.
 
