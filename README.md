@@ -48,7 +48,7 @@ GCA-predictability-2026/
 
 Contains the core CA simulation engine (`HY_CA_secrete_and_sense_cells.py`) and a minimal demo script (`main.py`). The CA operates on a triangular lattice with periodic boundary conditions. At each synchronous timestep, every cell senses the concentrations of two diffusible molecules secreted by its neighbors and updates its gene-expression state according to a fixed interaction matrix, threshold matrix, and diffusion lengths. The engine handles lattice construction, parameter initialization, simulation, trajectory analysis, vortex detection, and visualization.
 
-Also contains the scripts used to generate the one-million-run dataset for the machine-learning analyses (`v251209Parallel_iterate_trajectories.py`) and the single-cell perturbation experiments (`perturb_initial_state_oneByone.py`, `Analyze_perturb_initial_state_oneByone.py`).
+Also contains the the one-million-run dataset for the machine-learning analyses (`/labeled_data_2025_parallel`) and the single-cell perturbation experiments (`perturb_initial_state_oneByone.py`, `Analyze_perturb_initial_state_oneByone.py`).
 
 ---
 
@@ -56,7 +56,7 @@ Also contains the scripts used to generate the one-million-run dataset for the m
 
 Contains Python scripts for analyzing the discrete vortices and non-contractible loop (NCL) strings that govern pattern formation.
 
-Recoding the four cell states as discrete phase vectors reveals three classes of vortex cores: +1 vortices (counterclockwise winding), −1 vortices (clockwise winding), and 0 vortices (no net winding). These structures are invisible in the raw cell-state representation but their dynamics fully determine macroscopic fate. Scripts characterize vortex peak abundances, the descending-staircase structure of vortex counts over time, the timing between last vortex-pair annihilation and final pattern formation, and the dynamics of NCL strings connecting the final surviving vortex pair — which provide a forward-time predictive signature distinguishing spiral-wave runs from non-spiral runs.
+Recoding the four cell states as discrete phase vectors reveals three classes of vortex cores: +1 vortices (counterclockwise winding), −1 vortices (clockwise winding), and 0 vortices (no net winding). These structures are invisible in the raw cell-state (color) representation but their dynamics fully determine macroscopic fate. Scripts characterize vortex peak abundances, the descending-staircase structure of vortex counts over time, the timing between last vortex-pair annihilation and final pattern formation, and the dynamics of NCL strings connecting the final surviving vortex pair — which provide a forward-time predictive signature distinguishing spiral-wave runs from non-spiral runs.
 
 ---
 
@@ -91,13 +91,12 @@ pip install numpy scipy pandas matplotlib imageio scikit-learn xgboost torch tqd
 
 **MATLAB** — for `clustering_trajectory/`
 
-**R** — for figure generation (not included in this repository)
 
 ---
 
 ## Citation
 
-If you use this code, please cite the corresponding manuscript (preprint and journal details to be added upon posting).
+If you use this code, please cite the corresponding paper (preprint and journal details to be added upon posting).
 
 ---
 
