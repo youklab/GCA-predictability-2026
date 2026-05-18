@@ -1,1 +1,41 @@
-Sample movies:  color representation & phase representation.
+````markdown
+# Movies
+
+Representative movies of the generalized cellular automaton (GCA) self-organizing from maximally disordered initial configurations. Three movies are hosted here; two additional large-file movies are available on the Youk Lab website (see below).
+
+---
+
+## Movies in this folder
+
+### TW3_8fps.avi
+A 20 × 20 lattice initialized from a maximally disordered configuration and self-organizing into a rectilinear traveling wave. Cell states are color-coded (one of four colors corresponding to the four discrete gene-expression states). Played at 8 frames per second.
+
+---
+
+### color_representation.mp4
+A 16 × 16 lattice initialized from a maximally disordered configuration and self-organizing into a rectilinear traveling wave. Cell states are color-coded (one of four colors). This movie and `phase_representation.mp4` below show the same CA trajectory under two different representations of cell state.
+
+---
+
+### phase_representation.mp4
+The same trajectory as `color_representation.mp4`, with cell states now represented as a discrete phase field. Each of the four cell states is assigned a phase (0, π/2, π, or 3π/2). Non-white cells mark positions where at least one nearest neighbor differs by a π-phase — these are cells belonging to vortex cores. Watching the vortex-core cells over time reveals the three-stage dynamics described in the paper: rapid vortex creation from the initial disorder, followed by a descending staircase of pairwise vortex annihilations, followed by the emergence of the final rectilinear wave once all vortices have vanished.
+
+---
+
+## Additional movies (hosted externally)
+
+The following movies are available at **[https://www.youklab.org/koopmans_data.html](https://www.youklab.org/koopmans_data.html)** and are too large to host on GitHub:
+
+| File | Size | Description |
+|------|------|-------------|
+| `TW1_8fps.avi` | 167.5 MB | Rectilinear wave formation from a maximally disordered initial configuration. Played at 8 frames per second. |
+| `TW2_8fps.avi` | 109.5 MB | Rectilinear wave formation from a maximally disordered initial configuration. Played at 8 frames per second. |
+
+---
+
+## Notes on the representations
+
+**Color representation**: each of the four discrete gene-expression states — (low, low), (low, high), (high, high), and (high, low) secretion rates of molecule 1 and molecule 2 — is assigned one of four colors, as shown in Fig. 1b of the manuscript. This is the "raw" view of the cellular automaton dynamics.
+
+**Phase representation**: the same four states are recoded as phases 0, π/2, π, and 3π/2, converting the lattice into a discrete phase field. Non-white cells are those that differ by exactly π from at least one nearest neighbor; these mark the boundaries of vortex cores. The topological structure of the dynamics — vortex creation, Brownian diffusion, and pairwise annihilation — is visible in this representation but entirely invisible in the color representation. See Fig. 2a of the manuscript and Supplementary Note 3 for further detail.
+````
