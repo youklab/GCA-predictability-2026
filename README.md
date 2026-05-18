@@ -31,6 +31,70 @@ Requires: Python ≥ 3.9, NumPy, SciPy, Matplotlib, pandas, imageio, and a Matpl
 
 ---
 
+## Tested environment and demo behavior
+
+### Tested on
+
+The code has been tested in the following environment:
+
+- **Python 3.14** with these libraries:
+  - numpy
+  - scipy 
+  - matplotlib 
+  - pandas 
+  - imageio 
+  - scikit-learn 
+  - xgboost 
+  - torch (PyTorch) 
+  - tqdm 
+- **MATLAB R2025a** with the Parallel Computing Toolbox (for `clustering_trajectory/`).
+- **Operating systems**: macOS (v26.4.1); the Python code also runs on standard Linux distributions (e.g., Ubuntu 22.04).
+
+Minimum supported Python version is 3.9. No specialized hardware is required for the demo or for reproducing individual analyses. The large-scale machine-learning experiments (training on up to 850,000 simulations) benefit from a multi-core CPU and ≥32 GB RAM but are not required for the demo.
+
+### Installation time
+
+On a standard desktop with a working Python 3 environment and an existing scientific-Python stack, `pip install`-ing all dependencies typically takes **2–5 minutes**. A fresh install on a clean machine may take 10–15 minutes, primarily due to PyTorch.
+
+### Expected demo output
+
+Running `python main.py` from inside `GCA_simulation/` produces:
+
+1. **An interactive Matplotlib window** showing a real-time animation of a 14 × 14 triangular lattice evolving from a maximally disordered initial configuration to its final pattern. Each cell is colored according to its discrete gene-expression state (one of four colors). The animation persists on the final frame until the window is closed.
+2. **Terminal output** reporting the detected final pattern type (`static`, `rectilinear wave`, or `spiral wave`) and the time to pattern formation in timesteps. An example terminal output looks like:
+
+```
+   Lattice: 14 x 14 (triangular, periodic boundary conditions)
+   Initial configuration: maximally disordered (Moran's I ≈ 0)
+   Final pattern type: spiral wave
+   Formation time: 4781 timesteps
+```
+
+Because the initial configuration is randomly drawn at each run, the outcome (static, rectilinear wave, or spiral wave) and formation time vary from run to run. This variability is intentional: it illustrates the central finding of the paper, that the final outcome cannot be reliably inferred from the initial state alone.
+
+### Expected demo run time
+
+A single demo run completes in approximately **10 seconds to ~5 minutes** on a standard desktop, depending on the (randomly drawn) initial configuration. Formation times in the cellular automaton itself range from a few hundred timesteps (typical for static or rectilinear-wave outcomes) to tens of thousands of timesteps (typical for spiral-wave outcomes); see Supplementary fig. 2 of the paper for the full distribution.
+
+### Running with custom parameters
+
+The CA can be run with custom parameter values — lattice size, interaction matrix `M`, threshold matrix `K`, secretion constants `C`, diffusion lengths `LAMB`, cell radius `RCELL`, lattice spacing `A0`, and initial ON-fractions `P0` — by editing the parameter block in `HY_CA_secrete_and_sense_cells.py` (or `main.py`). The default values used throughout the paper are:
+
+```python
+RCELL = 0.2
+A0    = 1.5
+M     = [[1, 1], [-1, 0]]
+K     = [[3, 10], [11, 4]]
+C     = [18, 16]
+LAMB  = [1.0, 1.2]
+P0    = [0.5, 0.55]
+LATTICE_SIZE = 14   # 14 x 14 triangular lattice with periodic boundary conditions
+```
+
+Changing `LATTICE_SIZE` runs the simulation on a different lattice (the paper reports analyses up to L = 100). Changing `M`, `K`, `C`, or `LAMB` runs the simulation under a different gene-regulatory circuit or different signaling parameters. See `GCA_simulation/README.md` for further detail on each parameter and on the analysis scripts that consume the simulation output.
+
+---
+
 ## Repository structure
 
 ```
