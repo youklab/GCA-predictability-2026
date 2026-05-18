@@ -103,7 +103,8 @@ GCA-predictability-2026/
 ├── GCA_simulation/               ← CA simulation engine and demo script
 ├── analyze_topologicalModes/     ← vortex and NCL-string analyses
 ├── ML_analyses/                  ← machine-learning tests of predictability
-└── clustering_trajectory/        ← graph-based trajectory clustering
+├── clustering_trajectory/        ← graph-based trajectory clustering
+└── movies/                       ← representative movies of CA self-organization dynamics
 ```
 
 ---
@@ -137,6 +138,12 @@ Across all model classes, prediction performance remained indistinguishable from
 ## clustering_trajectory
 
 Contains MATLAB scripts for graph-based clustering of CA trajectories and a visualization of how trajectory structure evolves over time. Analyses use a coarse scalar observable — total vortex-core size as a function of backward time — to ask when trajectories destined for different final pattern types begin to separate. An animated example (`graph_evolution.gif`) illustrates the graph-based clustering analysis.
+
+---
+
+## movies
+
+Contains representative movies of the GCA self-organizing from maximally disordered initial configurations into rectilinear traveling waves, shown in both the color representation (four cell states as four colors) and the phase-field representation (non-white cells marking vortex-core positions). Two additional large-file movies are hosted externally at [https://www.youklab.org/koopmans_data.html](https://www.youklab.org/koopmans_data.html). See `movies/README.md` for full descriptions of each file.
 
 ---
 
