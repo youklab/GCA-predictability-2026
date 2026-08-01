@@ -1,22 +1,43 @@
-# ML_analyses
+# Machine learning on initial configurations
 
-This folder contains all code and data associated with the machine-learning analysis of predictability in the generalized cellular automaton (GCA). We sought to determine whether the macroscopic fate of the system — static configurations versus dynamic wave patterns — could be predicted from the initial configuration of cell states.
+This folder contains the codes and data for the machine-learning analysis that asked whether the static-vs-dynamic fate (2-way prediction task) could be predicted directly from its initial configuration.
+
+This README covers only the initial-configuration analysis of 2-way prediction task. Analyses of later configurations, three-fate prediction, and the winding-field representation are documented separately.
+
 
 ## The central question
 
-Despite the fully deterministic update rules of the GCA, we discovered that we could not predict which of the three macroscopic outcomes (static configuration, rectilinear wave, or spiral wave) a given initial configuration would produce. To test this rigorously, we subjected the system to a deliberate, conservative ML challenge: reduce the problem to binary classification (static vs. dynamic), generate one million independent simulations, and ask whether any of a broad set of supervised learning models could extract predictive signal from the initial cell states.
+The GCA is fully deterministic: each initial configuration completely fixes whether the system will eventually form a static configuration, rectilinear wave, or spiral wave. We asked whether this predetermined fate could be predicted directly from the initial cell states without evolving the automaton to the final pattern.
 
-The answer, across every model class we tested, was no.
+To make this test deliberately conservative, we reduced the three fates to a binary classification problem:
+
+- static configuration = 1
+- dynamic pattern, comprising rectilinear and spiral waves = 0
+
+Distinguishing static from dynamic outcomes is less demanding than predicting all three pattern types separately. We generated one million independently initialized simulations and tested whether any of several supervised machine-learning models could detect fate-predictive information in the initial configurations.
+
+None of the tested model classes predicted the binary fate more accurately than chance.
+
 
 ## What is in this folder
 
 ```
-ML_analyses/
-├── ML_codes/          # All Python scripts for the ML and NMI analyses
+ML_analyses_on_initialConfig/
+├── ML_codes/          # Python scripts for the initial-configuration ML and NMI analyses
 ├── data_for_ML/
 │   ├── labeled_data_2025_parallel/   # 100 raw data chunks (.npz), one per batch of simulations
 │   └── ML_splits/                    # Frozen train/val/test split arrays and metadata
 ```
+
+## Data representation and CNN input
+
+In the stored data files, each 14 × 14 lattice configuration is represented as a flattened vector of 196 cell states encoded as integers in {1, 2, 3, 4}. This flattened vector is a storage format, not the CNN input shape.
+
+Before being supplied to the CNN, each vector was reshaped into a 14 × 14 lattice and one-hot encoded as a four-channel image, with one channel for each cellular state. The resulting CNN input therefore had shape 4 × 14 × 14.
+
+The CNN treated the triangular lattice through this square-array embedding. Its local 3 × 3 receptive field contained all six triangular-lattice nearest neighbors of each cell, together with two array positions that were not triangular-lattice nearest neighbors. The embedding therefore preserved the local information while approximating, rather than exactly encoding, the triangular-lattice geometry.
+
+
 
 ## Design philosophy
 
@@ -28,7 +49,7 @@ The ML analysis was designed around three guiding principles:
 
 3. **Use a frozen, held-out test set.** All reported metrics were computed on a fixed test set of 100,000 configurations never seen during training or threshold calibration, preventing any form of test leakage.
 
-We found that prediction performance saturated at chance-level balanced accuracy and ROC–AUC (≈ 0.5) across all model classes, regardless of training set size. This result is consistent with and supported by a model-agnostic bound derived from normalized mutual information (NMI) analysis, which showed that individual cell states carry no detectable predictive information about the final macroscopic outcome.
+Across all tested model classes, balanced accuracy and ROC–AUC saturated near their binary chance levels of 0.5, regardless of training-set size. A complementary normalized mutual information (NMI) analysis found no detectable association between the initial state of any individual cell and the final binary fate. Together, these results indicate that the tested models could not extract practically accessible fate-predictive information from the initial configurations.
 
 ## Dependencies
 
@@ -36,10 +57,10 @@ We found that prediction performance saturated at chance-level balanced accuracy
 - NumPy, SciPy, Matplotlib, pandas
 - scikit-learn (logistic regression, ExtraTrees, histogram-based gradient boosting)
 - XGBoost
-- PyTorch (MLP and CNN models)
+- PyTorch, for the multilayer perceptron and convolutional neural network
 
 ## Reference
 
-Koopmans, Kay, and Youk (2026).
+Koopmans, Kay, and Youk (2026), *Predictability can be dynamically constructed in deterministic systems*
 
 For full methodological details, see **Supplementary Note 2** of the paper.
