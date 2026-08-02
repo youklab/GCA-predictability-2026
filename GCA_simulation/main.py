@@ -9,8 +9,10 @@ import HY_CA_secrete_and_sense_cells as CA
 # -----------------------------------------------------------------------
 # Simulation parameters
 # -----------------------------------------------------------------------
-tmax     = 300        # maximum timesteps to simulate; set generously so the full
-                      # trajectory until final-pattern formation is always captured
+tmax     = 60000      # maximum timesteps to simulate. Set generously: static and
+                      # rectilinear-wave outcomes usually form within a few hundred
+                      # timesteps, but spiral-wave outcomes can take tens of
+                      # thousands. See Supplementary fig. 2 for the distribution.
 gridsize = 14         # gridsize^2 = total number of cells (14x14 = 196)
 lat_type = 'triangular'
 periodic_bc = [1, 1]  # periodic boundaries in both x and y
@@ -33,7 +35,12 @@ p0    = np.array([0.5, 0.55])
 I_min = 0.01
 dI    = 0.05
 
-frame_rate = 5   # frames per second for the real-time display
+# Display settings. The simulation may run for tens of thousands of timesteps,
+# which is far more than is watchable, so the movie is capped. The topological
+# self-organization of interest (vortex formation and annihilation) happens
+# within roughly the first hundred timesteps.
+frame_rate         = 5     # frames per second for the real-time display
+max_frames_to_show = 300   # cap on the number of timesteps displayed
 
 # -----------------------------------------------------------------------
 # Build lattice, set parameters, randomize initial condition
@@ -52,17 +59,31 @@ t0 = time.time()
 trajectory.run_model(tmax)
 trajectory.analyse_trajectory()
 print(f'Simulation complete in {time.time() - t0:.1f} s')
-print(f'Final pattern type: {trajectory.final_pattern_type}  '
-      f'(1 = static configuration, 2 = spiral wave, 3 = rectilinear wave)')
-print(f'Pattern formed at timestep: {trajectory.first_recurrent_state_time}')
+
+pattern_names = {1: 'static configuration', 2: 'spiral wave', 3: 'rectilinear wave'}
+ptype = int(trajectory.final_pattern_type)
+formation_time = trajectory.first_recurrent_state_time
+
+print(f'Final pattern type: {ptype}  ({pattern_names.get(ptype, "unrecognized")})')
+
+# If the trajectory never became periodic within tmax, the reported time is just
+# tmax and is NOT a formation time. Say so, rather than printing a number that
+# looks like a result.
+if formation_time is None or formation_time >= tmax:
+    print(f'WARNING: the final pattern had NOT yet formed after {tmax} timesteps.')
+    print(f'         The value above is the simulation limit, not a formation time.')
+    print(f'         Increase tmax at the top of this script and run again.')
+else:
+    print(f'Pattern formed at timestep: {formation_time}')
 
 # -----------------------------------------------------------------------
-# Display the full trajectory as a real-time movie.
-# The movie runs from t=0 to the timestep at which the final pattern
-# forms (trajectory.first_recurrent_state_time), then holds the last
-# frame on screen until the window is manually closed.
+# Display the trajectory as a real-time movie.
 # -----------------------------------------------------------------------
-end_frame = trajectory.first_recurrent_state_time
+end_frame = int(min(formation_time if formation_time else tmax, max_frames_to_show))
+
+if formation_time and formation_time > max_frames_to_show:
+    print(f'Displaying the first {end_frame} of {formation_time} timesteps ' 
+          f'(raise max_frames_to_show to see more).')
 
 trajectory.show_trajectory(
     folderName_for_frames  = None,   # set to a folder path to save frames to disk

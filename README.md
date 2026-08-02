@@ -2,83 +2,220 @@
 
 Code repository for the manuscript:
 
-**"Predictability is dynamically constructed by topological collective modes in deterministic systems"**
+**"Predictability can be dynamically constructed in deterministic systems"**
 
 Lars Koopmans, Elinor M. Kay, and Hyun Youk (2026)
+
+Data: [10.5281/zenodo.21728102](https://doi.org/10.5281/zenodo.21728102)
 
 ---
 
 ## Overview
 
-This repository contains the simulation engine, analysis scripts, machine-learning codes, and key data used in the study. We investigated a generalized cellular automaton (GCA) of secrete-and-sense cells on a two-dimensional triangular lattice with four discrete gene-expression states and exponentially decaying diffusion-weighted coupling. Starting from maximally disordered initial conditions, the system self-organizes into one of three macroscopic outcomes: static configurations, rectilinear waves, or spiral waves. Although the dynamics are deterministic, the final outcome cannot be reliably inferred from the initial state alone — neither human inspection nor machine-learning models can do so — yet predictability can instead be constructed dynamically, emerging through the behavior of discrete topological objects (vortices and non-contractible loop strings) that arise during self-organization.
+This repository contains the simulation engine, analysis scripts, machine-learning codes, and
+key data used in the study. We investigated a generalized cellular automaton (GCA) of
+secrete-and-sense cells on a two-dimensional triangular lattice with four discrete
+gene-expression states and exponentially decaying diffusion-weighted coupling. Starting from
+maximally disordered initial conditions, the system self-organizes into one of three
+macroscopic outcomes: static configurations, rectilinear waves, or spiral waves.
 
-Each subfolder contains its own README with descriptions of individual scripts.
+Although the dynamics are deterministic, so that the initial configuration completely fixes the
+outcome, that outcome cannot be reliably inferred from the initial configuration by any
+practical means we tested. Predictability is instead constructed as the system evolves,
+through discrete topological objects that appear during self-organization: vortices,
+non-contractible-loop strings, and the winding field.
+
+Each subfolder has its own README describing the scripts it contains.
+
+---
+
+## Where to start
+
+| If you want to | go to |
+|---|---|
+| watch the automaton self-organize | `GCA_simulation/` and run `main.py` |
+| see whether the fate can be predicted from the initial state | `ML_analyses_on_initialConfigs/` |
+| see when along a trajectory the fate becomes predictable | `ML_along_trajectory/` |
+| see what carries that predictability | `winding_field/` |
+| see the sparse, late-time version of the same topology | `NCL_strings/` |
+| see the vortex analyses | `analyze_topologicalModes/` |
 
 ---
 
 ## Quick start
 
-To run a single CA simulation and watch the self-organization dynamics unfold in real time:
+To run a single simulation and watch the self-organization unfold:
 
 ```bash
 cd GCA_simulation
 python main.py
 ```
 
-This runs the GCA from a randomly drawn initial configuration using the parameter values reported in the paper, displays a real-time movie of the evolving lattice from the initial disordered state until the final pattern forms, and prints the pattern type and formation time to the terminal. The final frame remains on screen until the window is closed. The outcome — static configuration, rectilinear wave, or spiral wave — will vary between runs, illustrating that the final outcome cannot be reliably inferred from the initial state alone, the central finding of the paper.
+This runs the automaton from a randomly drawn initial configuration using the parameter values
+reported in the paper, displays a movie of the evolving lattice, and prints the final pattern
+type and the timestep at which it formed. The final frame stays on screen until you close the
+window.
 
-Requires: Python ≥ 3.9, NumPy, SciPy, Matplotlib, pandas, imageio, and a Matplotlib backend that supports interactive display (`TkAgg` is set by default; change this in `main.py` if needed for your system).
+The outcome varies from run to run, which is the point: it illustrates that the outcome cannot
+be reliably inferred from the initial configuration, the central finding of the paper.
+
+Requires Python 3.9 or later with NumPy, SciPy, Matplotlib, pandas and imageio, and a
+Matplotlib backend supporting interactive display (`TkAgg` is set by default; change it at the
+top of `main.py` if your system needs something else).
+
+**A note on timing.** The simulation runs until the pattern forms, up to a limit of 60,000
+timesteps set at the top of `main.py`. Static and rectilinear-wave outcomes usually form within
+a few hundred to a few thousand timesteps; spiral-wave outcomes can take much longer. A single
+run typically completes in 10 to 60 seconds. The movie is capped at the first 300 timesteps,
+because that is where the topological self-organization happens and a full trajectory would be
+far too long to watch; raise `max_frames_to_show` in `main.py` to see more.
 
 ---
 
-## Tested environment and demo behavior
-
-### Tested on
-
-The code has been tested in the following environment:
-
-- **Python 3.14** with these libraries:
-  - numpy
-  - scipy 
-  - matplotlib 
-  - pandas 
-  - imageio 
-  - scikit-learn 
-  - xgboost 
-  - torch (PyTorch) 
-  - tqdm 
-- **MATLAB R2025a** with the Parallel Computing Toolbox (for `clustering_trajectory/`).
-- **Operating systems**: macOS (v26.4.1); the Python code also runs on standard Linux distributions (e.g., Ubuntu 22.04).
-
-Minimum supported Python version is 3.9. No specialized hardware is required for the demo or for reproducing individual analyses. The large-scale machine-learning experiments (training on up to 850,000 simulations) benefit from a multi-core CPU and ≥32 GB RAM but are not required for the demo.
-
-### Installation time
-
-On a standard desktop with a working Python 3 environment and an existing scientific-Python stack, `pip install`-ing all dependencies typically takes **2–5 minutes**. A fresh install on a clean machine may take 10–15 minutes, primarily due to PyTorch.
-
-### Expected demo output
-
-Running `python main.py` from inside `GCA_simulation/` produces:
-
-1. **An interactive Matplotlib window** showing a real-time animation of a 14 × 14 triangular lattice evolving from a maximally disordered initial configuration to its final pattern. Each cell is colored according to its discrete gene-expression state (one of four colors). The animation persists on the final frame until the window is closed.
-2. **Terminal output** reporting the detected final pattern type (`static`, `rectilinear wave`, or `spiral wave`) and the time to pattern formation in timesteps. An example terminal output looks like:
+## Repository structure
 
 ```
-   Lattice: 14 x 14 (triangular, periodic boundary conditions)
-   Initial configuration: maximally disordered (Moran's I ≈ 0)
-   Final pattern type: spiral wave
-   Formation time: 4781 timesteps
+GCA-predictability-2026/
+|-- README.md                        <- this file
+|-- GCA_simulation/                  <- simulation engine and demo script
+|-- ML_analyses_on_initialConfigs/   <- can the fate be predicted from t = 0 alone?
+|-- ML_along_trajectory/             <- when does the fate become predictable?
+|-- winding_field/                   <- the field that carries the predictability
+|-- NCL_strings/                     <- non-contractible-loop strings
+|-- analyze_topologicalModes/        <- vortex analyses and perturbation experiments
+|-- clustering_trajectory/           <- graph-based trajectory clustering (MATLAB)
+`-- movies/                          <- movies of the automaton self-organizing
 ```
 
-Because the initial configuration is randomly drawn at each run, the outcome (static, rectilinear wave, or spiral wave) and formation time vary from run to run. This variability is intentional: it illustrates the central finding of the paper, that the final outcome cannot be reliably inferred from the initial state alone.
+---
 
-### Expected demo run time
+## The folders
 
-A single demo run completes in approximately **10 seconds to ~5 minutes** on a standard desktop, depending on the (randomly drawn) initial configuration. Formation times in the cellular automaton itself range from a few hundred timesteps (typical for static or rectilinear-wave outcomes) to tens of thousands of timesteps (typical for spiral-wave outcomes); see Supplementary fig. 2 of the paper for the full distribution.
+### GCA_simulation
 
-### Running with custom parameters
+The simulation engine (`HY_CA_secrete_and_sense_cells.py`) and the demo script (`main.py`).
+The automaton runs on a triangular lattice with periodic boundary conditions. At each
+synchronous timestep every cell senses the concentrations of two diffusible molecules secreted
+by its neighbours and updates its gene-expression state according to a fixed interaction
+matrix, threshold matrix and set of diffusion lengths. The engine handles lattice construction,
+simulation, trajectory analysis, vortex detection and visualization.
 
-The CA can be run with custom parameter values — lattice size, interaction matrix `M`, threshold matrix `K`, secretion constants `C`, diffusion lengths `LAMB`, cell radius `RCELL`, lattice spacing `A0`, and initial ON-fractions `P0` — by editing the parameter block in `HY_CA_secrete_and_sense_cells.py` (or `main.py`). The default values used throughout the paper are:
+### ML_analyses_on_initialConfigs
+
+Tests whether the outcome can be predicted from the initial configuration alone. To make the
+test as forgiving as possible the task was reduced to a binary one, static versus dynamic, and
+tried across logistic regression, extremely randomized trees, gradient boosting, XGBoost, a
+deep multilayer perceptron and a convolutional network, all trained on splits derived from one
+million independent runs.
+
+No model class beat chance. A model-agnostic mutual-information analysis separately found that
+no individual lattice site carries detectable dependence on the outcome. This folder also holds
+the one-million-run labelled dataset used for those analyses.
+
+### ML_along_trajectory
+
+Asks a different question: not whether the outcome can be predicted from the start, but **when**
+along a trajectory it becomes predictable. A single snapshot is taken from a chosen point of
+each trajectory and handed to a model, and that point is slid from the initial configuration to
+the moment the pattern forms.
+
+Six model classes were tested, including a transformer and a neural cellular automaton. All
+behave the same way: chance at the initial configuration, progressively more accurate on later
+configurations, near-perfect once the pattern has formed.
+
+### winding_field
+
+The winding field labels every cell according to how the connected same-state region it belongs
+to wraps around the torus. It is computed deterministically from the configuration, so it adds
+no information; what it changes is how directly the global topology can be read. A network
+given only the winding field recovers nearly all the accuracy obtainable from the full
+configuration, which identifies it as the carrier of the emerging predictability.
+
+This folder contains the extraction code, the time-series code, the network comparisons, an
+ablation testing which parts of the field matter, and validation scripts.
+
+### NCL_strings
+
+A non-contractible-loop string is a path of same-state cells that wraps around the torus and
+therefore cannot be shrunk to a point. These strings are the sparse, late-time instance of the
+same topology the winding field records densely. Their disappearance progressively announces
+the static and rectilinear-wave outcomes, while their continued presence cannot establish that
+they will persist, which is why spiral-wave fate resolves only near pattern formation.
+
+### analyze_topologicalModes
+
+Analyses of the discrete vortices. Recoding the four cell states as discrete phase vectors
+reveals three classes of vortex core: +1 (counterclockwise winding), -1 (clockwise), and 0 (no
+net winding). These are invisible in the raw cell-state representation. Scripts here
+characterize peak vortex abundance, the staircase structure of vortex counts over time, the
+interval between the last vortex-pair annihilation and pattern formation, and the single-cell
+perturbation experiments.
+
+### clustering_trajectory
+
+MATLAB scripts for graph-based clustering of trajectories, using total vortex-core size as a
+function of backward time to ask when trajectories headed for different outcomes begin to
+separate. `graph_evolution.gif` animates the result.
+
+### movies
+
+Movies of the automaton self-organizing, in both the colour representation (four cell states as
+four colours) and the phase-field representation (non-white cells marking vortex cores). Two
+larger movies are hosted at [youklab.org](https://www.youklab.org/koopmans_data.html).
+
+---
+
+## Data
+
+Small result files are included in this repository so that figures can be checked or replotted
+without rerunning anything. The large datasets are not: the trajectory splits and the extracted
+topological fields run to several gigabytes, beyond what GitHub is intended to hold.
+
+Those are deposited at [10.5281/zenodo.21728102](https://doi.org/10.5281/zenodo.21728102), and
+everything can also be regenerated from the code here.
+
+---
+
+## Running the analysis code
+
+The analysis scripts were written against specific local paths. In this repository those have
+been replaced by placeholders that you must set before running anything:
+
+| placeholder | what it should point to |
+|---|---|
+| `<PATH_TO_SPLITS>` | the trajectory splits, from Zenodo or regenerated locally |
+| `<PATH_TO_OUTPUT>` | wherever you want results written |
+| `<PATH_TO_CODE>` | `winding_field/codes`, which holds the module the topology scripts import |
+
+They appear near the top of each script. The README in each folder says which ones that folder
+needs. The demo in `GCA_simulation` needs none of this and runs as-is.
+
+---
+
+## Dependencies
+
+```bash
+pip install numpy scipy pandas matplotlib imageio scikit-learn xgboost torch tqdm
+```
+
+PyTorch is needed only for the neural-network scripts, and MATLAB only for
+`clustering_trajectory/`. Tested on macOS with Python 3.9 to 3.14 and on Ubuntu 22.04;
+MATLAB R2025a with the Parallel Computing Toolbox for the clustering code.
+
+No specialized hardware is needed for the demo or for individual analyses. The large-scale
+machine-learning experiments benefit from a GPU and 32 GB or more of RAM, but neither is
+required to reproduce any single result.
+
+On a machine with a working scientific-Python stack, installing the dependencies takes a few
+minutes; a fresh install may take 10 to 15, mostly PyTorch.
+
+---
+
+## Running with custom parameters
+
+Lattice size, interaction matrix `M`, threshold matrix `K`, secretion constants `C`, diffusion
+lengths `LAMB`, cell radius `RCELL`, lattice spacing `A0` and initial ON-fractions `P0` can all
+be changed at the top of `main.py`. The values used throughout the paper are:
 
 ```python
 RCELL = 0.2
@@ -88,89 +225,22 @@ K     = [[3, 10], [11, 4]]
 C     = [18, 16]
 LAMB  = [1.0, 1.2]
 P0    = [0.5, 0.55]
-LATTICE_SIZE = 14   # 14 x 14 triangular lattice with periodic boundary conditions
+LATTICE_SIZE = 14
 ```
 
-Changing `LATTICE_SIZE` runs the simulation on a different lattice (the paper reports analyses up to L = 100). Changing `M`, `K`, `C`, or `LAMB` runs the simulation under a different gene-regulatory circuit or different signaling parameters. See `GCA_simulation/README.md` for further detail on each parameter and on the analysis scripts that consume the simulation output.
-
----
-
-## Repository structure
-
-```
-GCA-predictability-2026/
-├── README.md                     ← this file
-├── GCA_simulation/               ← CA simulation engine and demo script
-├── analyze_topologicalModes/     ← vortex and NCL-string analyses
-├── ML_analyses/                  ← machine-learning tests of predictability
-├── clustering_trajectory/        ← graph-based trajectory clustering
-└── movies/                       ← representative movies of CA self-organization dynamics
-```
-
----
-
-## GCA_simulation
-
-Contains the core CA simulation engine (`HY_CA_secrete_and_sense_cells.py`) and a minimal demo script (`main.py`). The CA operates on a triangular lattice with periodic boundary conditions. At each synchronous timestep, every cell senses the concentrations of two diffusible molecules secreted by its neighbors and updates its gene-expression state according to a fixed interaction matrix, threshold matrix, and diffusion lengths. The engine handles lattice construction, parameter initialization, simulation, trajectory analysis, vortex detection, and visualization.
-
-Also contains the the one-million-run dataset for the machine-learning analyses (`/labeled_data_2025_parallel`) and the single-cell perturbation experiments (`perturb_initial_state_oneByone.py`, `Analyze_perturb_initial_state_oneByone.py`).
-
----
-
-## analyze_topologicalModes
-
-Contains Python scripts for analyzing the discrete vortices and non-contractible loop (NCL) strings that govern pattern formation.
-
-Recoding the four cell states as discrete phase vectors reveals three classes of vortex cores: +1 vortices (counterclockwise winding), −1 vortices (clockwise winding), and 0 vortices (no net winding). These structures are invisible in the raw cell-state (color) representation but their dynamics fully determine macroscopic fate. Scripts characterize vortex peak abundances, the descending-staircase structure of vortex counts over time, the timing between last vortex-pair annihilation and final pattern formation, and the dynamics of NCL strings connecting the final surviving vortex pair — which provide a forward-time predictive signature distinguishing spiral-wave runs from non-spiral runs.
-
----
-
-## ML_analyses
-
-Contains Python scripts testing whether the final macroscopic outcome of the CA can be predicted from the static initial configuration.
-
-The goal was not model optimization but rather asking the most forgiving version of the prediction question: can any supervised learning approach extract predictive signal from the initial configuration, given virtually unlimited training data and increasingly expressive model classes? The task was reduced to binary classification (static vs. dynamic outcome) and tested across logistic regression, Extremely Randomized Trees, gradient boosting, XGBoost, a deep MLP, and a CNN — all trained and evaluated on fixed splits derived from one million independent CA runs (850,000 training / 50,000 validation / 100,000 frozen test).
-
-Across all model classes, prediction performance remained indistinguishable from chance under balanced accuracy and ROC–AUC. A model-agnostic featurewise normalized mutual information (NMI) analysis confirmed that no individual lattice site carries detectable predictive dependence on final fate beyond a shuffled-label baseline. The limitation is not model capacity or data availability: no practically extractable predictive signal exists in the initial configuration under any of the conditions tested. This is consistent with the single-cell perturbation experiments showing that altering one cell out of 196 redirects macroscopic fate approximately 50% of the time — indicating that the features that make the system's fate predictable have not yet taken shape in the initial configuration.
-
----
-
-## clustering_trajectory
-
-Contains MATLAB scripts for graph-based clustering of CA trajectories and a visualization of how trajectory structure evolves over time. Analyses use a coarse scalar observable — total vortex-core size as a function of backward time — to ask when trajectories destined for different final pattern types begin to separate. An animated example (`graph_evolution.gif`) illustrates the graph-based clustering analysis.
-
----
-
-## movies
-
-Contains representative movies of the GCA self-organizing from maximally disordered initial configurations into rectilinear traveling waves, shown in both the color representation (four cell states as four colors) and the phase-field representation (non-white cells marking vortex-core positions). Two additional large-file movies are hosted externally at [https://www.youklab.org/koopmans_data.html](https://www.youklab.org/koopmans_data.html). See `movies/README.md` for full descriptions of each file.
-
----
-
-## Dependencies
-
-**Python** (CA simulation, vortex analysis, machine learning):
-- Python ≥ 3.9
-- numpy, scipy, pandas, matplotlib, imageio
-- scikit-learn, xgboost
-- torch (PyTorch) — for MLP and CNN scripts only
-- tqdm — for `ncl_data_collection_script.py` only
-
-```bash
-pip install numpy scipy pandas matplotlib imageio scikit-learn xgboost torch tqdm
-```
-
-**MATLAB** — for `clustering_trajectory/`
-
+Changing `LATTICE_SIZE` runs the automaton on a different lattice; the paper reports analyses
+up to L = 100. Changing `M`, `K`, `C` or `LAMB` runs it under a different gene-regulatory
+circuit or different signalling parameters.
 
 ---
 
 ## Citation
 
-If you use this code, please cite the corresponding paper (preprint and journal details to be added upon posting).
+If you use this code, please cite the corresponding paper (details to be added on publication)
+and the data deposit, [10.5281/zenodo.21728102](https://doi.org/10.5281/zenodo.21728102).
 
 ---
 
 ## Acknowledgements
 
-This work was supported by the National Institutes of Health (NIH-NIGMS R35 Grant GM147508).
+Supported by the National Institutes of Health (NIH-NIGMS R35 Grant GM147508).
