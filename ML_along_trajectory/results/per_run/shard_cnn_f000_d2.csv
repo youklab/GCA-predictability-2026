@@ -1,0 +1,2 @@
+tag,model,pos,labels,fraction_f,depth,d_model,n_heads,balanced_accuracy,accuracy,recall_static,recall_spiral,recall_rectilinear,n_train,n_test,seed,epochs,val_balacc_best,params,train_seconds,notes
+cnn_f000_d2,cnn,-,real,0.00,2,-,-,0.341213,0.375350,0.324223,0.110828,0.588586,200000,100000,0,7,0.344117,39747,17.7,"ch64 3x3 circular-pad, global-mean-pool bs1024 lr1.0e-03"

@@ -1,0 +1,2 @@
+tag,model,pos,labels,fraction_f,depth,d_model,n_heads,balanced_accuracy,accuracy,recall_static,recall_spiral,recall_rectilinear,n_train,n_test,seed,epochs,val_balacc_best,params,train_seconds,notes
+tf2_pc_f050_rel,toroidal_transformer,rel,real,0.50,4,128,4,0.637375,0.636990,0.796894,0.445156,0.670076,200000,100000,0,30,0.638070,896707,2604.1,locality-prior rel bias; attn+mean pool; bs2048 lr1.5e-03 drop0.05

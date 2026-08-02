@@ -1,0 +1,2 @@
+tag,model,pos,labels,fraction_f,depth,d_model,n_heads,balanced_accuracy,accuracy,recall_static,recall_spiral,recall_rectilinear,n_train,n_test,seed,epochs,val_balacc_best,params,train_seconds,notes
+tf_pc_f050,toroidal_transformer,rel,real,0.50,4,128,4,0.445631,0.453410,0.588224,0.214041,0.534628,200000,100000,0,12,0.443826,797379,1208.8,bs1024 lr4.0e-04 drop0.10 ffn4 cosine+warmup

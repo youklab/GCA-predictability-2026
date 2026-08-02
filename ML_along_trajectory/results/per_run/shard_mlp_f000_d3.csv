@@ -1,0 +1,2 @@
+tag,model,pos,labels,fraction_f,depth,d_model,n_heads,balanced_accuracy,accuracy,recall_static,recall_spiral,recall_rectilinear,n_train,n_test,seed,epochs,val_balacc_best,params,train_seconds,notes
+mlp_f000_d3,mlp,-,real,0.00,3,-,-,0.333498,0.325010,0.652068,0.006407,0.342019,200000,100000,0,7,0.333901,2906115,3.7,width1024 drop0.25 bs1024 lr1.0e-03

@@ -1,0 +1,2 @@
+tag,model,pos,labels,fraction_f,depth,d_model,n_heads,balanced_accuracy,accuracy,recall_static,recall_spiral,recall_rectilinear,n_train,n_test,seed,epochs,val_balacc_best,params,train_seconds,notes
+nca_f050_u8,nca,-,real,0.50,8,-,-,0.590016,0.576620,0.847596,0.373608,0.548843,200000,100000,0,12,0.592444,10627,111.4,"ch32 shared-weight residual CA step, unroll=depth bs1024 lr1.0e-03"

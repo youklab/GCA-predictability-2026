@@ -125,6 +125,8 @@ class CellularLattice:
         self.cell_4phase = []
         self.state_fractions = []
         self.first_recurrent_state_time = []
+        self.true_formation_time = []
+        self.period = []
         self.final_pattern_type = []
         self.vortex_cores = []
         self.vortex_cores_labeled = []
@@ -335,6 +337,7 @@ class CellularLattice:
         self.cell_4phase = get_phase_seq_4(self.cell_4state)
         self.state_fractions = compute_4_state_fractions(self)
         self.first_recurrent_state_time = get_first_recurrent_state_time(self)
+        self.true_formation_time, self.period = get_true_formation_time(self)
         self.final_pattern_type = get_final_configuration_type(self)
 
         if self.number_of_nn == 6:
@@ -1019,14 +1022,35 @@ def compute_phase_differences(self):
 
 
 def get_final_configuration_type(self):
+    """
+    Classify the final self-organized pattern of a completed trajectory.
+
+    Returns
+    -------
+    final_pattern_type : int
+        1 = static           : the final lattice is spatially uniform (one state
+                               across all cells; a period-1 fixed point).
+        2 = spiral wave      : a dynamic pattern whose global state composition is
+                               non-stationary within the cycle (rotating spiral).
+        3 = rectilinear wave : a dynamic pattern whose global state composition has
+                               constant increments within the cycle (a rigidly
+                               translating plane / rectilinear wave).
+
+    The number-to-name mapping (1 static, 2 spiral, 3 rectilinear) was verified
+    against movies of individual trajectories for all three classes (Youk lab, 2026).
+    Operationally, type 3 is detected when the state-2 fraction has a single unique
+    first-difference after the first recurrence; type 2 is every other dynamic outcome.
+    """
     # All cells in the same state at the final timestep -> static configuration
     if len(np.unique(self.cell_4state[:, -1])) == 1:
         final_pattern_type = 1
 
-    # State-fraction increments are constant after the first recurrence -> periodic (wave) pattern
+    # State-2 fraction has constant increments after the first recurrence
+    # -> rectilinear (rigidly translating) wave
     elif len(np.unique(np.diff(self.state_fractions[1, self.first_recurrent_state_time:]))) == 1:
         final_pattern_type = 3
 
+    # Any other dynamic outcome -> spiral wave
     else:
         final_pattern_type = 2
 
@@ -1040,6 +1064,56 @@ def get_first_recurrent_state_time(self):
     unique_configurations = np.unique(cell4, axis=1)
     p_time = unique_configurations.shape[1]
     return p_time
+
+
+def get_true_formation_time(self):
+    """
+    Compute the 'true formation time' of the pattern: the earliest timestep t1
+    such that the whole-lattice configuration at t1 reappears at some later
+    timestep t2. Equivalently, the timestep at which the trajectory first
+    enters its eventual cycle.
+
+    For a static (fixed-point) pattern, this is the timestep at which the
+    fixed point was first reached; the resulting cycle has period 1.
+
+    For a periodic (wave) pattern, this is the timestep at which the transient
+    ends and the periodic loop begins; the period is the cycle length.
+
+    For a non-periodic pattern in which no whole-lattice configuration repeats
+    within tmax, returns (tmax, -1) -- meaning the trajectory has not been
+    observed to enter any cycle within the simulation window.
+
+    Note
+    ----
+    For trajectories that have entered a cycle within tmax,
+        first_recurrent_state_time = true_formation_time + period.
+    For a static pattern, period = 1, so
+        true_formation_time = first_recurrent_state_time - 1.
+
+    Returns
+    -------
+    true_formation_time : int
+        Earliest timestep at which a recurring state first appeared.
+        Equals tmax if no recurrence is detected within tmax.
+    period : int
+        Length of the detected cycle (= 1 for static, > 1 for periodic).
+        Equals -1 if no recurrence is detected within tmax.
+    """
+    cell4 = self.cell_4state
+    tmax = cell4.shape[1]
+
+    # Hash each column as raw bytes; exact and fast for integer-valued arrays.
+    seen = {}
+    for t in range(tmax):
+        key = cell4[:, t].astype(np.int8).tobytes()
+        if key in seen:
+            true_formation_time = seen[key]
+            period = t - seen[key]
+            return int(true_formation_time), int(period)
+        seen[key] = t
+
+    # No whole-lattice recurrence was observed within tmax.
+    return int(tmax), -1
 
 
 def compute_4_state_fractions(self):

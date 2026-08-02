@@ -1,0 +1,2 @@
+tag,model,pos,labels,fraction_f,depth,d_model,n_heads,balanced_accuracy,accuracy,recall_static,recall_spiral,recall_rectilinear,n_train,n_test,seed,epochs,val_balacc_best,params,train_seconds,notes
+t_rel,toroidal_transformer,rel,real,0.50,4,128,4,0.370508,0.396040,0.270833,0.304542,0.536149,200000,100000,0,3,0.366662,896707,483.5,locality-prior rel bias; attn+mean pool; bs1024 lr1.0e-03 drop0.05

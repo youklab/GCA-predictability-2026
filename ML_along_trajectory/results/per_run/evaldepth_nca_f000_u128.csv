@@ -1,0 +1,6 @@
+tag,fraction_f,labels,trained_unrolls,eval_unrolls,balanced_accuracy
+nca_f000_u128,0.00,real,128,32,0.333333
+nca_f000_u128,0.00,real,128,64,0.335264
+nca_f000_u128,0.00,real,128,128,0.333333
+nca_f000_u128,0.00,real,128,256,0.331596
+nca_f000_u128,0.00,real,128,512,0.333333

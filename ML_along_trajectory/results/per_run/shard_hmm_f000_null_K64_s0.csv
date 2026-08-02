@@ -1,0 +1,2 @@
+tag,model,scan,labels,fraction_f,n_states,balanced_accuracy,accuracy,recall_static,recall_spiral,recall_rectilinear,n_train_per_class,n_test,seed,em_iters,mean_test_loglik,pred_frac_static,pred_frac_spiral,pred_frac_rectilinear,train_seconds,notes
+hmm_f000_null_K64_s0,hmm,serpentine,permuted,0.00,64,0.335846,0.434040,0.430742,0.327855,0.248940,15000,100000,0,3,-271.6677,0.4260,0.3267,0.2472,87.7,"per-class categorical HMM, scaled Baum-Welch, uniform-prior argmax"

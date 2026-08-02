@@ -1,0 +1,6 @@
+tag,fraction_f,labels,trained_unrolls,eval_unrolls,balanced_accuracy
+nca_gap_f0.50_u128,0.50,real,128,32,0.318916
+nca_gap_f0.50_u128,0.50,real,128,64,0.471540
+nca_gap_f0.50_u128,0.50,real,128,128,0.627645
+nca_gap_f0.50_u128,0.50,real,128,256,0.522250
+nca_gap_f0.50_u128,0.50,real,128,512,0.356026
