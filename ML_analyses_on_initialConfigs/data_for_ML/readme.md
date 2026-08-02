@@ -22,14 +22,27 @@ Each `.npz` file stores one batch of GCA simulations and contains two arrays:
 | `data` | (N, 196) | int8 | Flattened initial configurations; each row is one 14 × 14 lattice, cell states ∈ {1, 2, 3, 4} |
 | `labels` | (N,) | int8 | Binary outcome label: 1 = static configuration, 0 = dynamic pattern (rectilinear or spiral wave) |
 
+### Storage format vs. model input
+
+The `data` array stores each lattice as a **flattened vector of 196 values**. This is a storage
+format only. It is **not** the shape in which configurations were presented to the models.
+
+Before being given to the convolutional network, each 196-element row was reshaped back into a
+14 x 14 lattice and one-hot encoded into four channels, one per cell state, giving an input of
+shape **4 x 14 x 14**. The CNN therefore operated on two-dimensional data throughout, and its
+3 x 3 receptive field contained all six triangular-lattice nearest neighbours of each cell,
+together with two array positions that are not nearest neighbours on the triangular lattice.
+The square-array embedding therefore preserves local structure while approximating, rather than
+exactly encoding, the triangular-lattice geometry.
+
 Together, the 100 chunks contain **1,000,000 independent GCA simulations**, each started from a randomly drawn initial configuration on a 14 × 14 triangular lattice. Each chunk contains exactly 10,000 simulations.
 
 **Class balance:**
-We found that the dataset is class-imbalanced: static outcomes (label = 1) comprise approximately **26.7%** of the dataset, while dynamic outcomes (label = 0) comprise the remaining **73.3%**. This fraction is consistent across all 100 chunks (range: 25.5%–27.7%), confirming that the class distribution is stable across the simulation ensemble. This imbalance means that a classifier predicting "dynamic" for every example would achieve ~73% raw accuracy while providing no predictive information — motivating our use of balanced accuracy and ROC–AUC as primary metrics throughout the ML analysis. Per-chunk label fractions are documented in `ML_splits/chunk_label_fractions.csv` and `ML_splits/chunk_label_stats.json`.
+We found that the dataset is class-imbalanced: static outcomes (label = 1) comprise approximately **26.7%** of the dataset, while dynamic outcomes (label = 0) comprise the remaining **73.3%**. This fraction is consistent across all 100 chunks (range: 25.5%–27.7%), confirming that the class distribution is stable across the simulation ensemble. This imbalance means that a classifier predicting "dynamic" for every example would achieve ~73% raw accuracy while providing no predictive information — motivating our use of balanced accuracy and ROC–AUC as primary metrics throughout the ML analysis. Per-chunk label fractions are documented in `ml_splits/chunk_label_fractions.csv` and `ml_splits/chunk_label_stats.json`.
 
 ---
 
-## ML_splits/
+## ml_splits/
 
 **Contents:** Split provenance metadata and frozen index files. The large materialized input arrays (`X_*.npy`, `y_*.npy`) are not included in the repository because they can be exactly reproduced from the raw chunks using the scripts described below.
 
@@ -53,7 +66,7 @@ python prepare_splits_from_chunks.py
 python materialize_train_pool_v3.py
 ```
 
-This will generate `X_test.npy`, `y_test.npy`, `X_val.npy`, `y_val.npy`, `X_train_pool.npy`, and `y_train_pool.npy` in the `ML_splits/` directory. All settings needed to reproduce the exact split are recorded in `split_metadata.json`.
+This will generate `X_test.npy`, `y_test.npy`, `X_val.npy`, `y_val.npy`, `X_train_pool.npy`, and `y_train_pool.npy` in the `ml_splits/` directory. All settings needed to reproduce the exact split are recorded in `split_metadata.json`.
 
 ---
 
@@ -61,4 +74,4 @@ This will generate `X_test.npy`, `y_test.npy`, `X_val.npy`, `y_val.npy`, `X_trai
 
 If you use these data, please cite:
 
-> Koopmans, Kay, and Youk (2026).
+> Koopmans, Kay, and Youk (2026).\n>\n> Data deposit: https://doi.org/10.5281/zenodo.21728102
