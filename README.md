@@ -238,7 +238,7 @@ circuit or different signalling parameters.
 
 ## Citation
 
-If you use this code, please cite the corresponding paper (details to be added on publication)
+If you use this code, please cite the corresponding paper ([arXiv:2604.01088v2](https://arxiv.org/abs/2604.01088v2))
 and the data deposit, [10.5281/zenodo.21728102](https://doi.org/10.5281/zenodo.21728102).
 
 ---
