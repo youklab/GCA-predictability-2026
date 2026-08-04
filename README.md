@@ -1,10 +1,12 @@
 # GCA-predictability-2026
 
-Code repository for the manuscript:
+Code repository for the paper:
 
 **"Predictability can be dynamically constructed in deterministic systems"**
 
 Lars Koopmans, Elinor M. Kay, and Hyun Youk (2026)
+
+Preprint (April 2026 (v1); Aug. 2026 (v2)): [arXiv:2604.01088v2](https://arxiv.org/abs/2604.01088v2)
 
 Data: [10.5281/zenodo.21728102](https://doi.org/10.5281/zenodo.21728102)
 
