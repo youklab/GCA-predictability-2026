@@ -1054,6 +1054,22 @@ def get_final_configuration_type(self):
     else:
         final_pattern_type = 2
 
+    # A static outcome is defined by its dynamics: the configuration maps to
+    # itself under a single update, so the attractor has period 1. Spatial
+    # uniformity, tested first above, is the usual signature of this and is
+    # sufficient but not necessary, since a configuration can be frozen
+    # without being spatially uniform. A frozen configuration also has
+    # unchanging state fractions, which the rectilinear test cannot
+    # distinguish from a rigidly translating wave, so period 1 is tested
+    # directly here.
+    #
+    # Determinism makes this test exact: if two consecutive configurations
+    # are identical then the configuration is a fixed point at all later
+    # times.
+    if final_pattern_type != 1 and np.shape(self.cell_4state)[1] >= 2:
+        if np.array_equal(self.cell_4state[:, -1], self.cell_4state[:, -2]):
+            final_pattern_type = 1
+
     return final_pattern_type
 
 
