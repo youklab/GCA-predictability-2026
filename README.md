@@ -9,6 +9,7 @@ Lars Koopmans, Elinor M. Kay, and Hyun Youk (2026)
 Preprint (April 2026 (v1); Aug. 2026 (v2)): [arXiv:2604.01088v2](https://arxiv.org/abs/2604.01088v2)
 
 Data: [10.5281/zenodo.21728102](https://doi.org/10.5281/zenodo.21728102)
+Code archive: [10.5281/zenodo.21754318](https://doi.org/10.5281/zenodo.21754318)
 
 ---
 
@@ -239,7 +240,7 @@ circuit or different signalling parameters.
 ## Citation
 
 If you use this code, please cite the corresponding paper ([arXiv:2604.01088v2](https://arxiv.org/abs/2604.01088v2))
-and the data deposit, [10.5281/zenodo.21728102](https://doi.org/10.5281/zenodo.21728102).
+the data deposit, [10.5281/zenodo.21728102](https://doi.org/10.5281/zenodo.21728102), and the code archive, [10.5281/zenodo.21754318](https://doi.org/10.5281/zenodo.21754318).
 
 ---
 

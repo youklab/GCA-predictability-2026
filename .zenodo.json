@@ -1,0 +1,28 @@
+{
+  "title": "Code for: Predictability can be dynamically constructed in deterministic systems",
+  "upload_type": "software",
+  "license": "MIT",
+  "creators": [
+    { "name": "Koopmans, Lars" },
+    { "name": "Kay, Elinor M." },
+    { "name": "Youk, Hyun", "affiliation": "University of Illinois Urbana-Champaign" }
+  ],
+  "description": "<p>Simulation engine, analysis code, and machine-learning code for the study <i>Predictability can be dynamically constructed in deterministic systems</i> (Koopmans, Kay and Youk, 2026).</p><p>A generalized cellular automaton of secrete-and-sense cells on a periodic triangular lattice self-organizes from maximally disordered initial conditions into one of three macroscopic outcomes: static configurations, rectilinear waves, or spiral waves. The dynamics are deterministic, so the initial configuration completely fixes the outcome, yet that outcome cannot be reliably inferred from the initial configuration by any practical means tested. Predictability is instead constructed as the system evolves, through topological objects that appear during self-organization: vortices, non-contractible-loop strings, and the winding field.</p><p>The repository contains the simulation engine and a runnable demonstration; machine-learning analyses of initial configurations and of configurations sampled along each trajectory; code computing the winding field and testing how much fate-predictive signal it carries; non-contractible-loop string analyses; vortex analyses and single-cell perturbation experiments; and trajectory clustering. Each directory has its own documentation.</p><p>The datasets are deposited separately at doi:10.5281/zenodo.21728102.</p>",
+  "keywords": [
+    "cellular automaton",
+    "predictability",
+    "topological defects",
+    "self-organization",
+    "pattern formation",
+    "machine learning",
+    "cell-cell communication",
+    "spiral waves"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.21728102",
+      "relation": "isSupplementTo",
+      "resource_type": "dataset"
+    }
+  ]
+}
