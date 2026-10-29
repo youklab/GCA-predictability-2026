@@ -224,7 +224,7 @@ be changed at the top of `main.py`. The values used throughout the paper are:
 RCELL = 0.2
 A0    = 1.5
 M     = [[1, 1], [-1, 0]]
-K     = [[3, 10], [11, 4]]
+K     = [[3, 8.465876331385257], [11, 4]]
 C     = [18, 16]
 LAMB  = [1.0, 1.2]
 P0    = [0.5, 0.55]
