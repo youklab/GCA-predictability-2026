@@ -37,7 +37,7 @@ P0 = np.array([0.5, 0.55])
 I_MIN = 0.01
 DI = 0.05
 M_MATRIX = np.array([[1, 1], [-1, 0]])
-K_MATRIX = np.array([[3, 10], [11, 4]])
+K_MATRIX = np.array([[3, 8.465876331385257], [11, 4]])
 C_MATRIX = np.array([18, 16])
 LAMB = np.array([1, 1.2])
 
