@@ -3496,7 +3496,7 @@ def run_CA(M, K, N, tmax, dist, Rcell, a0, lamb, idx_celltype, Coff, Con, cells)
     # Calculate the interaction strengths between cells based on their distances and diffusion lengths
     for k in range(2):
         # Apply the interaction strength formula based on sinh, distance, and diffusion length
-        M[idx, k] = np.sinh(Rcell) / (a0 * dist[idx] / lamb[k]) * np.exp((Rcell - a0 * dist[idx]) / lamb[k])
+        M[idx, k] = np.sinh(Rcell / lamb[k]) / (a0 * dist[idx] / lamb[k]) * np.exp((Rcell - a0 * dist[idx]) / lamb[k])
 
     # Set a flag to detect if a periodic state has been reached (early termination)
     period = False
