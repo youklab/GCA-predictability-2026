@@ -862,7 +862,7 @@ def run_CA(M, K, N, tmax, dist, Rcell, a0, lamb, idx_celltype, Coff, Con, cells)
     Y = np.ones((N, 2, tmax))
 
     for k in range(2):
-        M[idx, k] = np.sinh(Rcell) / (a0 * dist[idx] / lamb[k]) * np.exp((Rcell - a0 * dist[idx]) / lamb[k])
+        M[idx, k] = np.sinh(Rcell / lamb[k]) / (a0 * dist[idx] / lamb[k]) * np.exp((Rcell - a0 * dist[idx]) / lamb[k])
 
     period = False
 

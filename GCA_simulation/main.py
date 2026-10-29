@@ -25,7 +25,7 @@ lamb = np.array([1, 1.2])   # diffusion lengths for the two secreted molecules
 # These are the parameter values used in the paper.
 M_matrix = np.array([[1,  1],
                      [-1, 0]])
-K_matrix = np.array([[3,  10],
+K_matrix = np.array([[3,  8.465876331385257],
                      [11,  4]])
 C_matrix = np.array([18, 16])
 
