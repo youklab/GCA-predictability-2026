@@ -47,7 +47,7 @@ I_min = 0.01
 dI    = 0.05
 
 M_matrix = np.array([[1,  1], [-1, 0]])
-K_matrix = np.array([[3, 10], [11, 4]])
+K_matrix = np.array([[3, 8.465876331385257], [11, 4]])
 C_matrix = np.array([18, 16])
 lamb     = np.array([1, 1.2])
 

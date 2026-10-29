@@ -53,7 +53,7 @@ LAMB = np.array([1.0, 1.2])
 
 M_MATRIX = np.array([[1, 1],
                      [-1, 0]])
-K_MATRIX = np.array([[3, 10],
+K_MATRIX = np.array([[3, 8.465876331385257],
                      [11, 4]])
 C_MATRIX = np.array([18, 16])
 
