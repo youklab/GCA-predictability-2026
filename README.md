@@ -5,8 +5,7 @@ Code repository for the paper:
 **"Predictability can be dynamically constructed in deterministic systems"**
 
 Lars Koopmans, Elinor M. Kay, and Hyun Youk (2026)
-Nature Communications (September 2026): 
-[https://www.nature.com/articles/s41467-026-77737-0](https://www.nature.com/articles/s41467-026-77737-0) 
+Nature Communications (September 2026): [https://www.nature.com/articles/s41467-026-77737-0](https://www.nature.com/articles/s41467-026-77737-0) 
 
 
 Preprint (April 2026 (v1); Aug. 2026 (v2)): [arXiv:2604.01088v2](https://arxiv.org/abs/2604.01088v2)
